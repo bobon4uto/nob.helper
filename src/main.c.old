@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+#define NOB_IMPLEMENTATION
+#define NOB_STRIP_PREFIX
+#include "../nob.h"
+
+#define TEMPLATE_PATH "../template/"
+
+_Bool cp_template_to(const char *dst_path);
+void print_help();
+
+int main(int argc, char **argv) {
+
+  switch (argc) {
+  case 1:
+    cp_template_to(get_current_dir_temp());
+    break;
+  case 2:
+    cp_template_to(argv[1]);
+    break;
+  default:
+    print_help();
+    break;
+  }
+  return 0;
+}
+_Bool cp_template_to(const char *dst_path) {
+
+  if (!mkdir_if_not_exists(dst_path))
+    return false;
+  set_current_dir(dst_path);
+  if (file_exists("nob.c")) {
+    printf("nob.c already exists, aborting.");
+    return false;
+  }
+  copy_directory_recursively(TEMPLATE_PATH, dst_path);
+  return true;
+}
+void print_help() { printf("help"); }
