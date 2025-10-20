@@ -5,7 +5,7 @@
 #include "../nob.h"
 
 _Bool cp_template_to(const char *dst_path);
-void print_help();
+void print_help(const char *program_name);
 
 int main(int argc, char **argv) {
 
@@ -14,10 +14,14 @@ int main(int argc, char **argv) {
     cp_template_to(get_current_dir_temp());
     break;
   case 2:
-    cp_template_to(argv[1]);
+    if (argv[1][0] == '-') {
+      print_help(argv[0]);
+    } else {
+      cp_template_to(argv[1]);
+    }
     break;
   default:
-    print_help();
+    print_help(argv[0]);
     break;
   }
   return 0;
@@ -28,14 +32,14 @@ _Bool cp_template_to(const char *dst_path) {
     return false;
   set_current_dir(dst_path);
   if (file_exists("nob.c")) {
-    printf("nob.c already exists, aborting.");
+    printf("nob.c already exists, aborting.\n");
     return false;
   }
   if (!file_exists(TEMPLATE_PATH)) {
     nob_log(ERROR,
             "Template folder \"" TEMPLATE_PATH
             "\" doesn't exist. Aborting. (Create that folder or recompile "
-            "nob.helper with different TEMPLATE_PATH that you desire.)");
+            "nob.helper with different TEMPLATE_PATH that you desire.)\n");
     return false;
   }
   if (!copy_directory_recursively(TEMPLATE_PATH, get_current_dir_temp())) {
@@ -43,4 +47,11 @@ _Bool cp_template_to(const char *dst_path) {
   }
   return true;
 }
-void print_help() { printf("help"); }
+void print_help(const char *program_name) {
+  printf(
+      "%s <project_folder>\nIf no project_folder is specified, it is "
+      "assumed to be the current one. Copies template from " TEMPLATE_PATH
+      " to project_folder.\n If project_folder already has nob.c, operation is "
+      "aborted.\n",
+      program_name);
+}
