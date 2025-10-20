@@ -9,4 +9,6 @@ I found it to be a good idea to create such a utility, because I found myself co
 nobh <project_folder>
 '''
 If none cspecified, it is assumed to be the current one. nobh will not copy, if it finds already existing nob.c.
+# nobh.sh
+Legacy version that copied nob.c and nob.h and was written in BASH.
 
